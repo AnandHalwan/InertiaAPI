@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Inertia API",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "start": "node app.js"
+  },
   "author": "AnandHalwan",
   "license": "ISC",
   "dependencies": {
