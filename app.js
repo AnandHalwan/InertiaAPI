@@ -38,10 +38,33 @@ app.post('/auth/signup', async (req, res) => {
         setup: false
       })
   
-      res.status(200).json(userRecord.uid);
+      res.status(200).json({
+        "userId": userRecord.uid
+      });
       
     } catch (error) {
-      res.status(500).json({error: 'Unable to create user'})
+      res.status(500).json({
+        error: 'Unable to create user'
+      })
+    }
+  })
+
+  app.get('/auth/signin', async (req, res) => {
+    try {
+      const {email, password} = req.body
+      console.log("Email: ", email)
+      console.log("Password: ", password)
+      const userRecord = await firebaseAuth.signInWithEmailAndPassword(auth, email, password)
+
+      console.log("User Id", userRecord.user.uid)
+      res.status(200).json({
+        "userId": userRecord.user.uid
+      })
+    } catch (error) {
+      console.log("Error signing in: ", error)
+      res.status(500).json({
+        success: false
+      })
     }
   })
 
