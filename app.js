@@ -37,19 +37,38 @@ app.post('/auth/signup', async (req, res) => {
         userId: userRecord.uid,
         setup: false
       })
-  
+      
+      const startingSplitId = ("s" + (new Date()).toString())
+      
+      const startingSplitDoc = {
+        "SplitId": startingSplitId,
+        "SplitName": "Start",
+        "workouts": []
+      }
+      
+      const splitRef = dbAdmin.collection("User").doc(userRecord.uid).collection("Splits").doc(startingSplitId);
+
+      splitRef.set(startingSplitDoc)
+        .then(function() {
+          console.log("Document successfully written!");
+        })
+        .catch(function(error) {
+          console.error("Error writing document: ", error);
+        });
+      
       res.status(200).json({
         "userId": userRecord.uid
       });
       
     } catch (error) {
+      console.error("Unable to create user: ", error)
       res.status(500).json({
         error: 'Unable to create user'
       })
     }
   })
 
-  app.get('/auth/signin', async (req, res) => {
+  app.post('/auth/signin', async (req, res) => {
     try {
       const {email, password} = req.body
       console.log("Email: ", email)
@@ -104,7 +123,7 @@ app.post('/auth/signup', async (req, res) => {
       console.log("Saving split")
       const {userId, splitDocument} = req.body;
       console.log("UserId: ", userId)
-      console.log("SplitDocument: ", splitDocument.workouts[0].exercises)
+      console.log("SplitDocument: ", splitDocument)
       const splitId = splitDocument["SplitId"]
       console.log("SplitId: ", splitId)
 
